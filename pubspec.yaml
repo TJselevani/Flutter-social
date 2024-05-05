@@ -37,7 +37,21 @@ dependencies:
 
   #log info to console and files
   logger: ^2.2.0
+
+  #firebase initialization
   firebase_core: ^2.30.1
+
+  #firebase authentication features
+  firebase_auth: ^4.19.4
+
+  #functional programming returning success or failure
+  fpdart: ^1.1.0
+
+  #predictable state management
+  bloc: ^8.1.4
+
+  #Flutter Widgets that make it easy to implement the BLoC design patter
+  flutter_bloc: ^8.1.5
 
 dev_dependencies:
   flutter_test:

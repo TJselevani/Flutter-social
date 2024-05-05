@@ -1,8 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/core/common/logo.dart';
 import 'package:social/core/theme/app_pallet.dart';
+import 'package:social/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:social/features/auth/presentation/pages/sign_in.dart';
 import 'package:social/features/auth/presentation/widgets/auth_Logo.dart';
 import 'package:social/features/auth/presentation/widgets/auth_field.dart';
@@ -80,9 +80,20 @@ class _SignUpPageState extends State<SignUpPage> {
                 ),
                 const SizedBox(height: 15),
                 const SizedBox(height: 20),
-                const Hero(
+                Hero(
                   tag: "AuthButton",
-                  child: AuthGradientButton(name: 'Sign Up'),
+                  child: AuthGradientButton(
+                    name: 'Sign Up',
+                    onPressed: () {
+                      if (formKey.currentState!.validate()) {
+                        context.read<AuthBloc>().add(AuthSignUp(
+                              name: nameController.text.trim(),
+                              email: emailController.text.trim(),
+                              password: passwordController.text.trim(),
+                            ));
+                      }
+                    },
+                  ),
                 ),
                 const SizedBox(height: 25),
                 GestureDetector(

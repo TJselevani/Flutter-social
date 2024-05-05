@@ -1,13 +1,36 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:social/core/logger/logger.dart';
 import 'package:social/core/theme/app_theme.dart';
+import 'package:social/features/auth/data/dataSources/auth_remote_data_source.dart';
+import 'package:social/features/auth/data/repository/auth_repository_implementation.dart';
+import 'package:social/features/auth/domain/useCase/user_sign_up.dart';
+import 'package:social/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:social/features/auth/presentation/pages/index.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => AuthBloc(
+            userSignUp: UserSignUp(
+              authRepository: AuthRepositoryImpl(
+                authRemoteDataSource:
+                    AuthRemoteDataSourceImpl(firebaseAuth: firebaseAuth),
+              ),
+            ),
+          ),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatefulWidget {

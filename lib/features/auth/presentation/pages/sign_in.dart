@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:social/core/common/logo.dart';
 import 'package:social/core/theme/app_pallet.dart';
 import 'package:social/features/auth/presentation/pages/sign_in_otp.dart';
