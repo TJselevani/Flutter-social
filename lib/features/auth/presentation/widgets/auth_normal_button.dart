@@ -21,15 +21,15 @@ class _AuthNormalButtonState extends State<AuthNormalButton> {
               colors: [AppPalette.greenColor4, AppPalette.greenColor5],
               begin: Alignment.bottomLeft,
               end: Alignment.topRight),
-          borderRadius: BorderRadius.circular(10)),
+          borderRadius: BorderRadius.circular(30)),
       child: ElevatedButton(
         onPressed: () => {
           widget.index == 1
-              ? Navigator.push(
+              ? Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const SignInPage()),
                 )
-              : Navigator.push(
+              : Navigator.pushReplacement(
                   context,
                   MaterialPageRoute(builder: (context) => const SignUpPage()),
                 )

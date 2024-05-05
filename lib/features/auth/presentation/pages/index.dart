@@ -5,7 +5,7 @@ import 'package:social/features/auth/presentation/widgets/auth_logo.dart';
 import 'package:social/features/auth/presentation/widgets/auth_normal_button.dart';
 
 class AuthIndexPage extends StatelessWidget {
-  const AuthIndexPage({Key? key});
+  const AuthIndexPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -72,14 +72,12 @@ class AuthIndexPage extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  AuthNormalButton(
-                    name: 'Sign In',
-                    index: 1,
-                  ),
-                  SizedBox(width: 20),
-                  AuthNormalButton(
-                    name: 'Sign Up',
-                    index: 2,
+                  Hero(
+                    tag: "AuthButton",
+                    child: AuthNormalButton(
+                      name: 'Get Started',
+                      index: 1,
+                    ),
                   ),
                 ],
               ),

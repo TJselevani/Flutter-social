@@ -1,37 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:social/core/theme/app_pallet.dart';
 
-class AuthGradientButton extends StatefulWidget {
+class AuthGradientButton extends StatelessWidget {
   final String name;
-  const AuthGradientButton({super.key, required this.name});
+  final VoidCallback? onPressed;
 
-  @override
-  State<AuthGradientButton> createState() => _AuthGradientButtonState();
-}
+  const AuthGradientButton({super.key, required this.name, this.onPressed});
 
-class _AuthGradientButtonState extends State<AuthGradientButton> {
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          gradient: const LinearGradient(
-              colors: [AppPalette.greenColor4, AppPalette.greenColor5],
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight),
-          borderRadius: BorderRadius.circular(10)),
+        gradient: const LinearGradient(
+          colors: [AppPalette.greenColor4, AppPalette.greenColor5],
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+        ),
+        borderRadius: BorderRadius.circular(30),
+      ),
       child: ElevatedButton(
-        onPressed: () => {},
+        onPressed: onPressed,
         style: ElevatedButton.styleFrom(
           fixedSize: const Size(300, 55),
           backgroundColor: AppPalette.transparent,
           shadowColor: AppPalette.transparent,
+          elevation: 0,
         ),
         child: Text(
-          widget.name,
+          name,
           style: const TextStyle(
-              color: AppPalette.greenColor6,
-              fontSize: 17,
-              fontWeight: FontWeight.bold),
+            color: AppPalette.greenColor6,
+            fontSize: 17,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ),
     );

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:social/core/logger/logger.dart';
 import 'package:social/core/theme/app_theme.dart';
 import 'package:social/features/auth/presentation/pages/index.dart';
-import 'package:social/features/auth/presentation/pages/sign_up.dart';
 import 'package:firebase_core/firebase_core.dart';
 
 Future<void> main() async {
