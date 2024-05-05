@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "782032570200",
+    "project_id": "mernadmin",
+    "storage_bucket": "mernadmin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:782032570200:android:49fe553ab8cce2ff70872d",
+        "android_client_info": {
+          "package_name": "com.example.social"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-TWGn0mjb7nWYlr1sNz-2whOUjzG2u-M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,0 +1,314 @@
+// ignore_for_file: avoid_print
+
+import 'package:flutter/material.dart';
+import 'package:social/explore/details.dart';
+import 'package:social/models/videos.model.dart';
+import 'package:cached_network_image/cached_network_image.dart'; // Import CachedNetworkImage
+
+class ExplorePage extends StatefulWidget {
+  const ExplorePage({super.key});
+
+  @override
+  State<ExplorePage> createState() => _ExplorePageState();
+}
+
+class _ExplorePageState extends State<ExplorePage> {
+  late TextEditingController controller;
+  late Future<List<VideoModel>> _videosFuture;
+  String userInput = '';
+
+  @override
+  void initState() {
+    super.initState();
+    controller = TextEditingController();
+    _videosFuture = _getInitialInfo();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  Future<List<VideoModel>> _getInitialInfo() async {
+    // Ensure you load data asynchronously, e.g., from an API or database
+    return VideoModel.seeVideos();
+  }
+
+  Widget _dialogueBuilder(BuildContext context, VideoModel video) {
+    ThemeData localTheme = Theme.of(context);
+    return SimpleDialog(
+      contentPadding: EdgeInsets.zero,
+      children: [
+        Hero(
+          tag: 'tag',
+          child: CachedNetworkImage(
+            // Use CachedNetworkImage for better image handling
+            imageUrl: video.url,
+            fit: BoxFit.fitHeight,
+            errorWidget: (context, url, error) =>
+                const Icon(Icons.error), // Error handling
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.all(16),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                video.title,
+                style: localTheme.textTheme.displaySmall,
+              ),
+              const SizedBox(height: 10),
+              Wrap(
+                children: [
+                  TextButton.icon(
+                    icon: const Icon(Icons.air),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                    label: const Text('sushimi'),
+                  ),
+                  const SizedBox(width: 20),
+                  TextButton.icon(
+                    icon: const Icon(Icons.air),
+                    onPressed: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const VideoCard(title: 'Stats'),
+                      ),
+                    ),
+                    label: const Text('fuga'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        )
+      ],
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Row(
+                  children: [
+                    const CircleAvatar(
+                      backgroundImage: NetworkImage(
+                        'https://th.bing.com/th/id/OIF.tYNT7lZflw7OO5xaPkG7fw?w=143&h=150&c=7&r=0&o=5&pid=1.7',
+                      ),
+                      radius: 30,
+                    ),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: TextField(
+                        controller: controller,
+                        decoration: InputDecoration(
+                          hintText: 'Search...',
+                          prefixIcon: const Icon(Icons.search),
+                          suffixIcon: IconButton(
+                            icon: const Icon(Icons.clear),
+                            onPressed: () => controller.clear(),
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.brown, width: 2.0),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: const BorderSide(
+                                color: Colors.brown, width: 1.0),
+                            borderRadius: BorderRadius.circular(12.0),
+                          ),
+                        ),
+                        onChanged: (value) {
+                          // Handle changes in search input
+                          print('Search query: $value');
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(8.0),
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: Text('username'),
+                ),
+              ),
+              Expanded(
+                child: FutureBuilder<List<VideoModel>>(
+                  future: _videosFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No videos available.'));
+                    }
+                    final videos = snapshot.data!;
+                    return ListView.builder(
+                      padding: const EdgeInsets.all(16.0),
+                      itemCount: videos.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return GestureDetector(
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (context) =>
+                                _dialogueBuilder(context, videos[index]),
+                          ),
+                          child: Card(
+                            color: const Color(0xFF3F1F1F),
+                            elevation: 4.0,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(15.0),
+                            ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                CachedNetworkImage(
+                                  imageUrl: videos[index].url,
+                                  width: double.infinity,
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                                const SizedBox(height: 8.0),
+                                ElevatedButton.icon(
+                                  onPressed: () {},
+                                  icon: const Icon(Icons.star),
+                                  label: const Text('Star'),
+                                  style: ElevatedButton.styleFrom(
+                                    primary: Colors.amber, // Background color
+                                    onPrimary: Colors.white, // Text color
+                                  ),
+                                ),
+                                Text(
+                                  'title: ${videos[index].title}',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber[500],
+                                  ),
+                                ),
+                                Text(
+                                  'Username:',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber[500],
+                                  ),
+                                ),
+                                Text(
+                                  'views:',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber[500],
+                                  ),
+                                ),
+                                Text(
+                                  'Days Ago',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber[500],
+                                  ),
+                                ),
+                                Text(
+                                  'Location',
+                                  style: TextStyle(
+                                    fontSize: 18.0,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.amber[500],
+                                  ),
+                                ),
+                                const SizedBox(height: 4.0),
+                                Text(
+                                  'Category',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0,
+                                    color: Colors.amber[500],
+                                  ),
+                                ),
+                                const SizedBox(height: 8.0),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
+              Container(
+                height: 80,
+                width: double.infinity,
+                color: Colors.grey[900],
+                padding: const EdgeInsets.all(10.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          // _selectedIndex = 2;
+                        });
+                      },
+                      child: const Text(
+                        'Explore',
+                        style: TextStyle(color: Colors.amber),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          // _selectedIndex = 1;
+                        });
+                      },
+                      child: IconButton(
+                        onPressed: () {},
+                        icon: const Icon(
+                          Icons.add,
+                          color: Colors.grey,
+                          size: 20.0,
+                          semanticLabel: 'favorite',
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        setState(() {
+                          // _selectedIndex = 1;
+                        });
+                      },
+                      child: const Text(
+                        'Library',
+                        style: TextStyle(color: Colors.amber),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
