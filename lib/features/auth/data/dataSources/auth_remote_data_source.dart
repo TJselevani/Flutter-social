@@ -1,5 +1,3 @@
-import 'dart:js_interop';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social/core/error/exceptions.dart';
 import 'package:social/core/logger/logger.dart';
@@ -46,7 +44,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw ServerException(message: 'User is null');
       }
       log.i('User signed up: ${userCredential.user}');
-      return UserModel.fromJson(userCredential.user!.toJSBox as Map<String, dynamic>);
+      return UserModel.fromUserCredential(userCredential.user);
     } catch (e) {
       log.e(e.toString());
       throw ServerException(message: e.toString());
