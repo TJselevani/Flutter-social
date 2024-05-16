@@ -43,7 +43,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         log.e('User is null');
         throw ServerException(message: 'User is null');
       }
-      log.i('User signed up: ${userCredential.user}');
+      log.i('User successfully signed up: ${userCredential.user}');
       return UserModel.fromUserCredential(userCredential.user);
     } catch (e) {
       log.e(e.toString());
@@ -55,9 +55,25 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<UserModel> logInWithEmailPassword({
     required String email,
     required String password,
-  }) {
-    // TODO: implement logInWithEmailPassword
-    throw UnimplementedError();
+  }) async {
+    try {
+      UserCredential userCredential =
+          await firebaseAuth.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (userCredential.user == null) {
+        log.e('User does not exist');
+        throw ServerException(message: 'Incorrect email or password, User does not Exist!');
+      }
+      log.i('User successfully signed In: ${userCredential.user}');
+      return UserModel.fromUserCredential(userCredential.user);
+    } catch (e) {
+      log.e(e.toString());
+      throw ServerException(message: e.toString());
+    }
+    
   }
 
   @override

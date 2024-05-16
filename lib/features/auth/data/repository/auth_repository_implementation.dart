@@ -1,4 +1,4 @@
-
+import 'package:firebase_auth/firebase_auth.dart' as fb;
 import 'package:fpdart/fpdart.dart';
 import 'package:social/core/error/exceptions.dart';
 import 'package:social/core/error/failures.dart';
@@ -22,10 +22,11 @@ class AuthRepositoryImpl implements AuthRepository {
         email: email,
         password: password,
       );
-
       return right(user);
     } on ServerException catch (e) {
       return left(Failure(e.message));
+    } on fb.FirebaseAuthException catch (e) {
+      return left(Failure(e.message.toString()));
     }
   }
 
@@ -33,9 +34,18 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<Either<Failure, User>> logInWithEmailPassword({
     required String email,
     required String password,
-  }) {
-    // TODO: implement logInWithEmailPassword
-    throw UnimplementedError();
+  }) async {
+    try {
+      final user = await authRemoteDataSource.logInWithEmailPassword(
+        email: email,
+        password: password,
+      );
+      return right(user);
+    } on ServerException catch (e) {
+      return left(Failure(e.message));
+    } on fb.FirebaseAuthException catch (e) {
+      return left(Failure(e.message.toString()));
+    }
   }
 
   @override
@@ -46,4 +56,17 @@ class AuthRepositoryImpl implements AuthRepository {
     // TODO: implement signInWithOTP
     throw UnimplementedError();
   }
+
+  // Future<Either<Failure, User>> _getUser(
+  //   Future<User> Function() fn,
+  // ) async {
+  //   try {
+  //     final user = await fn;
+  //     return right(user as User);
+  //   } on ServerException catch (e) {
+  //     return left(Failure(e.message));
+  //   } on fb.FirebaseAuthException catch (e) {
+  //     return left(Failure(e.message.toString()));
+  //   }
+  // }
 }

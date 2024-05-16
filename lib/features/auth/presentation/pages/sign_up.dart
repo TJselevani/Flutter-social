@@ -50,7 +50,8 @@ class _SignUpPageState extends State<SignUpPage> {
                 showSnackBar(context, state.message);
               }
               if (state is AuthSuccess) {
-                showSnackBar(context, '${state.user.firstName} Sign Up successful');
+                showSnackBar(
+                    context, '${state.user.firstName} Sign Up successful');
               }
             },
             builder: (context, state) {
@@ -101,11 +102,13 @@ class _SignUpPageState extends State<SignUpPage> {
                         name: 'Sign Up',
                         onPressed: () {
                           if (formKey.currentState!.validate()) {
-                            context.read<AuthBloc>().add(AuthSignUp(
-                                  name: nameController.text.trim(),
-                                  email: emailController.text.trim(),
-                                  password: passwordController.text.trim(),
-                                ));
+                            context.read<AuthBloc>().add(
+                                  AuthSignUp(
+                                    name: nameController.text.trim(),
+                                    email: emailController.text.trim(),
+                                    password: passwordController.text.trim(),
+                                  ),
+                                );
                           }
                         },
                       ),

@@ -5,6 +5,7 @@ import 'package:social/core/logger/logger.dart';
 import 'package:social/core/theme/app_theme.dart';
 import 'package:social/features/auth/data/dataSources/auth_remote_data_source.dart';
 import 'package:social/features/auth/data/repository/auth_repository_implementation.dart';
+import 'package:social/features/auth/domain/useCase/user_sign_in.dart';
 import 'package:social/features/auth/domain/useCase/user_sign_up.dart';
 import 'package:social/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:social/features/auth/presentation/pages/index.dart';
@@ -20,6 +21,12 @@ Future<void> main() async {
         BlocProvider(
           create: (_) => AuthBloc(
             userSignUp: UserSignUp(
+              authRepository: AuthRepositoryImpl(
+                authRemoteDataSource:
+                    AuthRemoteDataSourceImpl(firebaseAuth: firebaseAuth),
+              ),
+            ),
+            userSignIn: UserSignIn(
               authRepository: AuthRepositoryImpl(
                 authRemoteDataSource:
                     AuthRemoteDataSourceImpl(firebaseAuth: firebaseAuth),
