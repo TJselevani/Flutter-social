@@ -1,20 +1,23 @@
+import 'dart:js_interop';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:social/core/error/exceptions.dart';
 import 'package:social/core/logger/logger.dart';
+import 'package:social/features/auth/data/models/user.model.dart';
 
 abstract interface class AuthRemoteDataSource {
-  Future<String> signUpWithEmailPassword({
+  Future<UserModel> signUpWithEmailPassword({
     required String name,
     required String email,
     required String password,
   });
 
-  Future<String> logInWithEmailPassword({
+  Future<UserModel> logInWithEmailPassword({
     required String email,
     required String password,
   });
 
-  Future<String> signInWithOTP({
+  Future<UserModel> signInWithOTP({
     required String phoneNumber,
     required String code,
   });
@@ -26,7 +29,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl({required this.firebaseAuth});
 
   @override
-  Future<String> signUpWithEmailPassword({
+  Future<UserModel> signUpWithEmailPassword({
     required String name,
     required String email,
     required String password,
@@ -43,7 +46,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
         throw ServerException(message: 'User is null');
       }
       log.i('User signed up: ${userCredential.user}');
-      return userCredential.user!.uid;
+      return UserModel.fromJson(userCredential.user!.toJSBox as Map<String, dynamic>);
     } catch (e) {
       log.e(e.toString());
       throw ServerException(message: e.toString());
@@ -51,7 +54,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<String> logInWithEmailPassword({
+  Future<UserModel> logInWithEmailPassword({
     required String email,
     required String password,
   }) {
@@ -60,7 +63,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   }
 
   @override
-  Future<String> signInWithOTP({
+  Future<UserModel> signInWithOTP({
     required String phoneNumber,
     required String code,
   }) {

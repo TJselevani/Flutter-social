@@ -1,6 +1,7 @@
 import 'package:fpdart/fpdart.dart';
 import 'package:social/core/error/failures.dart';
 import 'package:social/core/useCase/useCase.dart';
+import 'package:social/features/auth/domain/entities/user.dart';
 import 'package:social/features/auth/domain/repository/auth_repository.dart';
 
 class UserSignUpParams {
@@ -15,12 +16,12 @@ class UserSignUpParams {
   });
 }
 
-class UserSignUp implements UseCase<String, UserSignUpParams> {
+class UserSignUp implements UseCase<User, UserSignUpParams> {
   final AuthRepository authRepository;
   const UserSignUp({required this.authRepository});
 
   @override
-  Future<Either<Failure, String>> call(UserSignUpParams params) async {
+  Future<Either<Failure, User>> call(UserSignUpParams params) async {
     return await authRepository.signUpWithEmailPassword(
       name: params.name,
       email: params.email,
